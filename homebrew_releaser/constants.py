@@ -1,16 +1,16 @@
 import os
 
+
 # Helper function to translate given INPUT_TARGET_* string from GitHub Actions into
 # appropriate bool or string value.
-def translate_target(target):
-  if isinstance(target, (bool)):
-    return bool
+def translate_target(target: str | bool) -> str | bool:
+    if type(target) == bool:
+        return target
+    if target.lower() not in {'true', 'false'}:
+        return target
+    else:
+        return target.lower() == 'true'
 
-  # Must check for string `false`/`true` since GitHub Actions passes the bool as a string
-  if target.lower() not in set(('true', 'false')):
-    return target
-  else:
-    return target.lower() == 'true'
 
 # User Input
 FORMULA_FOLDER = os.getenv('INPUT_FORMULA_FOLDER', 'formula')
