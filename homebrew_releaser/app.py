@@ -81,7 +81,7 @@ class App:
         logger.info(f'Latest release ({version}) successfully identified!')
 
         logger.info('Generating tar archive checksum(s)...')
-        archive_urls = {}
+        archive_urls = dict()
         archive_checksum_entries = ''
 
         # Auto-generated tar URL must come first for later use (order is important)
@@ -96,8 +96,8 @@ class App:
             auto_generated_release_tar = f'{archive_base_url}.tar.gz'
             auto_generated_release_zip = f'{archive_base_url}.zip'
 
-        archive_urls.update({'auto_tar', auto_generated_release_tar})
-        archive_urls.update({'auto_zip', auto_generated_release_zip})
+        archive_urls['auto_tar'] = auto_generated_release_tar
+        archive_urls['auto_zip'] = auto_generated_release_zip
 
         target_browser_download_base_url = (
             f'https://github.com/{GITHUB_OWNER}/{GITHUB_REPO}/releases/download/{version}/{GITHUB_REPO}-{version_no_v}'
@@ -105,19 +105,19 @@ class App:
         if TARGET_DARWIN_AMD64:
             target_url = (TARGET_DARWIN_AMD64 if type(TARGET_DARWIN_AMD64) == str
                           else f'{target_browser_download_base_url}-darwin-amd64.tar.gz')
-            archive_urls.update({'darwin_amd64', target_url})
+            archive_urls['darwin_amd64'] = target_url
         if TARGET_DARWIN_ARM64:
             target_url = (TARGET_DARWIN_ARM64 if type(TARGET_LINUX_ARM64) == str
                           else f'{target_browser_download_base_url}-darwin-arm64.tar.gz')
-            archive_urls.update({'darwin_arm64', target_url})
+            archive_urls['darwin_arm64'] = target_url
         if TARGET_LINUX_AMD64:
             target_url = (TARGET_LINUX_AMD64 if type(TARGET_LINUX_AMD64) == str
                           else f'{target_browser_download_base_url}-linux-amd64.tar.gz')
-            archive_urls.update({'linux_amd64', target_url})
+            archive_urls['linux_amd64'] = target_url
         if TARGET_LINUX_ARM64:
             target_url = (TARGET_LINUX_ARM64 if type(TARGET_LINUX_ARM64) == str
                           else f'{target_browser_download_base_url}-linux-arm64.tar.gz')
-            archive_urls.update({'linux_arm64', target_url})
+            archive_urls['linux_arm64'] = target_url
 
         checksums = []
         for archive_type, archive_url in archive_urls.items():
