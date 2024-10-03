@@ -17,6 +17,7 @@ from homebrew_releaser.constants import (
     HOMEBREW_TAP,
     LOGGER_NAME,
     SKIP_COMMIT,
+    TARGET,
     TARGET_DARWIN_AMD64,
     TARGET_DARWIN_ARM64,
     TARGET_LINUX_AMD64,
@@ -100,24 +101,39 @@ class App:
         archive_urls['auto_zip'] = auto_generated_release_zip
 
         target_browser_download_base_url = (
-            f'https://github.com/{GITHUB_OWNER}/{GITHUB_REPO}/releases/download/{version}/{GITHUB_REPO}-{version_no_v}'
+            f'https://github.com/{GITHUB_OWNER}/{GITHUB_REPO}/releases/download/{version}/'
         )
+        default_target_prefix = f'{GITHUB_REPO}-{version_no_v}'
+        if TARGET is str:
+            archive_urls['auto_tar'] = f'${target_browser_download_base_url}${TARGET}'
         if TARGET_DARWIN_AMD64:
-            target_url = (TARGET_DARWIN_AMD64 if type(TARGET_DARWIN_AMD64) == str
-                          else f'{target_browser_download_base_url}-darwin-amd64.tar.gz')
-            archive_urls['darwin_amd64'] = target_url
+            archive_urls['darwin_amd64'] = (
+                f'${target_browser_download_base_url}${(
+                    TARGET_DARWIN_AMD64 if TARGET_DARWIN_AMD64 is str
+                    else f'{default_target_prefix}-darwin-amd64.tar.gz'
+                )}'
+            )
         if TARGET_DARWIN_ARM64:
-            target_url = (TARGET_DARWIN_ARM64 if type(TARGET_LINUX_ARM64) == str
-                          else f'{target_browser_download_base_url}-darwin-arm64.tar.gz')
-            archive_urls['darwin_arm64'] = target_url
+            archive_urls['darwin_arm64'] = (
+                f'${target_browser_download_base_url}${(
+                    TARGET_DARWIN_ARM64 if TARGET_DARWIN_ARM64 is str
+                    else f'{default_target_prefix}-darwin-arm64.tar.gz'
+                )}'
+            )
         if TARGET_LINUX_AMD64:
-            target_url = (TARGET_LINUX_AMD64 if type(TARGET_LINUX_AMD64) == str
-                          else f'{target_browser_download_base_url}-linux-amd64.tar.gz')
-            archive_urls['linux_amd64'] = target_url
+            archive_urls['linux_amd64'] = (
+                f'${target_browser_download_base_url}${(
+                    TARGET_LINUX_AMD64 if TARGET_LINUX_AMD64 is str
+                    else f'{default_target_prefix}-linux-amd64.tar.gz'
+                )}'
+            )
         if TARGET_LINUX_ARM64:
-            target_url = (TARGET_LINUX_ARM64 if type(TARGET_LINUX_ARM64) == str
-                          else f'{target_browser_download_base_url}-linux-arm64.tar.gz')
-            archive_urls['linux_arm64'] = target_url
+            archive_urls['linux_arm64'] = (
+                f'${target_browser_download_base_url}${(
+                    TARGET_LINUX_ARM64 if TARGET_LINUX_ARM64 is str
+                    else f'{default_target_prefix}-linux-arm64.tar.gz'
+                )}'
+            )
 
         checksums = []
         for archive_type, archive_url in archive_urls.items():
@@ -142,13 +158,7 @@ class App:
                     archive_filename = Utils.get_filename_from_path(archive_url)
                     archive_checksum_entries += f'{checksum} {archive_filename}\n'
                     checksums.append(
-                        {
-                            archive_filename: {
-                                'checksum': checksum,
-                                'url': archive_url,
-                                'type': archive_type
-                            }
-                        },
+                        {archive_filename: {'checksum': checksum, 'url': archive_url, 'type': archive_type}},
                     )
                     break
 

@@ -169,7 +169,7 @@ def test_read_current_readme():
     """Tests that the content of a README found is returned."""
     readme = ReadmeUpdater.read_current_readme('./')
 
-    assert '# Homebrew Releaser' in readme
+    assert '# Fork of Homebrew Releaser' in readme
 
 
 def test_replace_table_contents():

@@ -99,13 +99,13 @@ jobs:
           # not pass `brew audit` due to mismatched or redundant version strings
           # Optional - string
           version: '1.2.0'
+          
+          # Adds default URL and checksum target.
+          # Optional - string
+          target: 'release.tar.gz'
 
-          # Adds URL and checksum targets for different OS and architecture pairs. Using this option assumes 
-          # a tar archive exists on your GitHub repo with the following URL pattern (this cannot be customized):
-          # https://github.com/{GITHUB_OWNER}/{REPO_NAME}/releases/download/{TAG}/{REPO_NAME}-{VERSION}-{OPERATING_SYSTEM}-{ARCHITECTURE}.tar.gz'
-          # Darwin AMD pre-existing path example: https://github.com/justintime50/myrepo/releases/download/v1.2.0/myrepo-1.2.0-darwin-amd64.tar.gz
-          # Linux ARM pre-existing path example: https://github.com/justintime50/myrepo/releases/download/v1.2.0/myrepo-1.2.0-linux-arm64.tar.gz
-          # Optional - booleans
+          # Adds URL and checksum targets for different OS and architecture pairs.
+          # Optional - boolean | string
           target_darwin_amd64: true
           target_darwin_arm64: false
           target_linux_amd64: true

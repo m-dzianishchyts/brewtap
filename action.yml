@@ -43,6 +43,9 @@ inputs:
   version:
     description: "Override the automatically detected version of a formula with an explicit value."
     required: false
+  target:
+    description: "Add a custom URL/checksum target by default."
+    required: false
   target_darwin_amd64:
     description: "Add a custom URL/checksum target for AMD64 Darwin builds."
     required: false
@@ -76,6 +79,7 @@ runs:
     - ${{ inputs.commit_email }}
     - ${{ inputs.install }}
     - ${{ inputs.test }}
+    - ${{ inputs.target }}
     - ${{ inputs.target_darwin_amd64 }}
     - ${{ inputs.target_darwin_arm64 }}
     - ${{ inputs.target_linux_amd64 }}

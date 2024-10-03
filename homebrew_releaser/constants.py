@@ -4,12 +4,13 @@ import os
 # Helper function to translate given INPUT_TARGET_* string from GitHub Actions into
 # appropriate bool or string value.
 def translate_target(target: str | bool) -> str | bool:
-    if type(target) == bool:
+    if target is bool:
         return target
-    if target.lower() not in {'true', 'false'}:
+    target_url: str = str(target)
+    if target_url.lower() not in {'true', 'false'}:
         return target
     else:
-        return target.lower() == 'true'
+        return target_url.lower() == 'true'
 
 
 # User Input
@@ -40,6 +41,7 @@ GITHUB_OWNER = GITHUB_REPOSITORY[0]
 GITHUB_REPO = GITHUB_REPOSITORY[1]
 
 # Matrix targets to add URL/checksum targets for
+TARGET = translate_target(os.getenv('INPUT_TARGET', False))
 TARGET_DARWIN_AMD64 = translate_target(os.getenv('INPUT_TARGET_DARWIN_AMD64', False))
 TARGET_DARWIN_ARM64 = translate_target(os.getenv('INPUT_TARGET_DARWIN_ARM64', False))
 TARGET_LINUX_AMD64 = translate_target(os.getenv('INPUT_TARGET_LINUX_AMD64', False))
