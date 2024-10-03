@@ -55,7 +55,7 @@ def test_update_readme_cannot_find_old_table(
     mock_replace_table_contents.assert_not_called()
 
 
-@patch('homebrew_releaser.readme_updater.FORMULA_FOLDER', 'test')
+@patch('homebrew_releaser.readme_updater.FORMULA_FOLDER', 'test/unit')
 def test_format_formula_data_no_ruby_files():
     """Tests that we throw an error when the formula folder provided does not contain any
     Ruby files (formula files).
@@ -75,11 +75,11 @@ def test_format_formula_data():
     """
     formulas = ReadmeUpdater.format_formula_data('./test')
 
-    assert len(formulas) == 9
+    assert len(formulas) == 14
     assert formulas[0] == {
-        'name': 'test-formula-template',
+        'name': 'test-generate-formula',
         'desc': 'Tool to release scripts, binaries, and executables to github',
-        'homepage': 'https://github.com/Justintime50/test-formula-template',
+        'homepage': 'https://github.com/Justintime50/test-generate-formula',
     }
 
 
@@ -111,7 +111,7 @@ def test_generate_table():
         '| Project                                                      | Description      | Install                     |\n' # noqa
         '| ------------------------------------------------------------ | ---------------- | --------------------------- |\n' # noqa
         '| [mock-formula](https://github.com/justintime50/mock-formula) | mock description | `brew install mock-formula` |\n' # noqa
-        '<!-- project_table_end -->'
+        '<!-- project_table_end -->\n'
     )
     # fmt: on
 
@@ -172,8 +172,7 @@ def test_read_current_readme():
     assert '# Homebrew Releaser' in readme
 
 
-@patch('homebrew_releaser.git.Git.add')
-def test_replace_table_contents(mock_git_add):
+def test_replace_table_contents():
     """Test that we add the new README changes to git."""
     with patch('builtins.open', mock_open()):
         ReadmeUpdater.replace_table_contents(
@@ -183,12 +182,11 @@ def test_replace_table_contents(mock_git_add):
             homebrew_tap='./',
         )
 
-    mock_git_add.assert_called_once()
 
-
+@patch('logging.Logger.debug')
 @patch('homebrew_releaser.git.Git.add')
-def test_replace_table_contents_no_readme(mock_git_add):
-    """Tests that we do not `git add` for a README that doesn't exist."""
+def test_replace_table_contents_no_readme(mock_git_add, mock_logger):
+    """Tests that we do not run through the update readme block when there is no readme."""
     ReadmeUpdater.replace_table_contents(
         file_content='mock file contents',
         old_table='old table contents',
@@ -196,7 +194,7 @@ def test_replace_table_contents_no_readme(mock_git_add):
         homebrew_tap='./test',
     )
 
-    mock_git_add.assert_not_called()
+    mock_logger.assert_not_called()
 
 
 def test_does_readme_exist():

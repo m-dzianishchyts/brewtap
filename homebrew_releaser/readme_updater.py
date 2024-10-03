@@ -14,7 +14,6 @@ from homebrew_releaser.constants import (
     FORMULA_FOLDER,
     LOGGER_NAME,
 )
-from homebrew_releaser.git import Git
 
 
 TABLE_START_TAG = '<!-- project_table_start -->'
@@ -108,7 +107,7 @@ class ReadmeUpdater:
             empty_cell_placeholder='NA',
         )
 
-        final_table = TABLE_START_TAG + '\n' + table + '\n' + TABLE_END_TAG
+        final_table = TABLE_START_TAG + '\n' + table + '\n' + TABLE_END_TAG + '\n'
 
         logger.debug(final_table)
 
@@ -180,11 +179,9 @@ class ReadmeUpdater:
                 readme_contents.write(file_content.replace(old_table, new_table))
             logger.debug(f'{readme} table updated successfully.')
 
-            Git.add(homebrew_tap)
-
     @staticmethod
     def does_readme_exist(homebrew_tap: str) -> Optional[str]:
-        """Determines the README file to open. The README file must either be:
+        """Determines the README file to open. The README file must either:
 
         1. Have the file extension of `.md`
         2. Reside in the root of a project

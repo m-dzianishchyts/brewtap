@@ -1,11 +1,16 @@
 import os
+from typing import Optional
 
 import woodchips
 
+from homebrew_releaser._version import __version__
 from homebrew_releaser.checksum import Checksum
 from homebrew_releaser.constants import (
     CHECKSUM_FILE,
+    CUSTOM_REQUIRE,
+    DOWNLOAD_STRATEGY,
     FORMULA_FOLDER,
+    FORMULA_INCLUDES,
     GITHUB_OWNER,
     GITHUB_REPO,
     GITHUB_TOKEN,
@@ -16,6 +21,7 @@ from homebrew_releaser.constants import (
     TARGET_DARWIN_ARM64,
     TARGET_LINUX_AMD64,
     TARGET_LINUX_ARM64,
+    VERSION,
 )
 from homebrew_releaser.formula import Formula
 from homebrew_releaser.git import Git
@@ -49,7 +55,7 @@ class App:
 
         1. Setup logging
         2. Grab the details about the tap
-        3. Download the tar archive(s)
+        3. Download the archive(s)
         4. Generate checksum(s)
         5. Generate the new formula
         6. Update README table (optional)
@@ -58,88 +64,95 @@ class App:
         App.setup_logger()
         logger = woodchips.get(LOGGER_NAME)
 
-        logger.info('Starting Homebrew Releaser...')
+        logger.info(f'Starting Homebrew Releaser v{__version__}...')
         App.check_required_env_variables()
 
         logger.info('Setting up git environment...')
         Git.setup(COMMIT_OWNER, COMMIT_EMAIL, HOMEBREW_OWNER, HOMEBREW_TAP)
 
         logger.info(f'Collecting data about {GITHUB_REPO}...')
-        repository = Utils.make_get_request(
-            url=f'{GITHUB_BASE_URL}/repos/{GITHUB_OWNER}/{GITHUB_REPO}',
-            stream=False,
+        repository = Utils.make_github_get_request(url=f'{GITHUB_BASE_URL}/repos/{GITHUB_OWNER}/{GITHUB_REPO}').json()
+        latest_release = Utils.make_github_get_request(
+            url=f'https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}/releases/latest'
         ).json()
-        tags = Utils.make_get_request(
-            url=f'{GITHUB_BASE_URL}/repos/{GITHUB_OWNER}/{GITHUB_REPO}/tags',
-            stream=False,
-        ).json()
-        version = tags[0]['name']
-        version_no_v = version.replace('v', '')
+        assets = latest_release['assets']
+        version = VERSION or latest_release['tag_name']
+        version_no_v = version.lstrip('v')
         logger.info(f'Latest release ({version}) successfully identified!')
 
         logger.info('Generating tar archive checksum(s)...')
         archive_urls = {}
+        archive_checksum_entries = ''
 
-        # Auto-generated tar URL must come first for later use
-        auto_generated_release_tar = f'https://github.com/{GITHUB_OWNER}/{GITHUB_REPO}/archive/{version}.tar.gz'
-        archive_urls.update({"auto_tar": auto_generated_release_tar})
+        # Auto-generated tar URL must come first for later use (order is important)
+        if repository["private"]:
+            logger.info('Repository is private. Using auto-generated release tarball and zipball REST API endpoints.')
+            archive_base_url = f'{GITHUB_BASE_URL}/repos/{GITHUB_OWNER}/{GITHUB_REPO}'
+            auto_generated_release_tar = f'{archive_base_url}/tarball/{version}'
+            auto_generated_release_zip = f'{archive_base_url}/zipball/{version}'
+        else:
+            logger.info('Repository is public. Using auto-generated release tarball and zipball public URLs.')
+            archive_base_url = f'https://github.com/{GITHUB_OWNER}/{GITHUB_REPO}/archive/refs/tags/{version}'
+            auto_generated_release_tar = f'{archive_base_url}.tar.gz'
+            auto_generated_release_zip = f'{archive_base_url}.zip'
 
-        auto_generated_release_zip = f'https://github.com/{GITHUB_OWNER}/{GITHUB_REPO}/archive/{version}.zip'
-        archive_urls.update({"auto_zip": auto_generated_release_zip})
+        archive_urls.update({'auto_tar', auto_generated_release_tar})
+        archive_urls.update({'auto_zip', auto_generated_release_zip})
 
+        target_browser_download_base_url = (
+            f'https://github.com/{GITHUB_OWNER}/{GITHUB_REPO}/releases/download/{version}/{GITHUB_REPO}-{version_no_v}'
+        )
         if TARGET_DARWIN_AMD64:
-            if type(TARGET_DARWIN_AMD64) == str:
-                archive_urls.update({"darwin_amd64": TARGET_DARWIN_AMD64})
-            else:
-                archive_urls.update(
-                    {
-                        "darwin_amd64": f'https://github.com/{GITHUB_OWNER}/{GITHUB_REPO}/releases/download/{version}/{GITHUB_REPO}-{version_no_v}-darwin-amd64.tar.gz'  # noqa
-                    }
-                )
+            target_url = (TARGET_DARWIN_AMD64 if type(TARGET_DARWIN_AMD64) == str
+                          else f'{target_browser_download_base_url}-darwin-amd64.tar.gz')
+            archive_urls.update({'darwin_amd64', target_url})
         if TARGET_DARWIN_ARM64:
-            if type(TARGET_DARWIN_ARM64) == str:
-                archive_urls.update({"darwin_arm64": TARGET_DARWIN_ARM64})
-            else:
-                archive_urls.update(
-                    {
-                        "darwin_arm64": f'https://github.com/{GITHUB_OWNER}/{GITHUB_REPO}/releases/download/{version}/{GITHUB_REPO}-{version_no_v}-darwin-arm64.tar.gz'  # noqa
-                    }
-                )
+            target_url = (TARGET_DARWIN_ARM64 if type(TARGET_LINUX_ARM64) == str
+                          else f'{target_browser_download_base_url}-darwin-arm64.tar.gz')
+            archive_urls.update({'darwin_arm64', target_url})
         if TARGET_LINUX_AMD64:
-            if type(TARGET_LINUX_AMD64) == str:
-                archive_urls.update({"linux_amd64": TARGET_LINUX_AMD64})
-            else:
-                archive_urls.update(
-                    {
-                        "linux_amd64": f'https://github.com/{GITHUB_OWNER}/{GITHUB_REPO}/releases/download/{version}/{GITHUB_REPO}-{version_no_v}-linux-amd64.tar.gz'  # noqa
-                    }
-                )
+            target_url = (TARGET_LINUX_AMD64 if type(TARGET_LINUX_AMD64) == str
+                          else f'{target_browser_download_base_url}-linux-amd64.tar.gz')
+            archive_urls.update({'linux_amd64', target_url})
         if TARGET_LINUX_ARM64:
-            if type(TARGET_LINUX_ARM64) == str:
-                archive_urls.update({"linux_arm64": TARGET_LINUX_ARM64})
-            else:
-                archive_urls.update(
-                    {
-                        "linux_arm64": f'https://github.com/{GITHUB_OWNER}/{GITHUB_REPO}/releases/download/{version}/{GITHUB_REPO}-{version_no_v}-linux-arm64.tar.gz'  # noqa
-                    }
-                )
+            target_url = (TARGET_LINUX_ARM64 if type(TARGET_LINUX_ARM64) == str
+                          else f'{target_browser_download_base_url}-linux-arm64.tar.gz')
+            archive_urls.update({'linux_arm64', target_url})
 
         checksums = []
         for archive_type, archive_url in archive_urls.items():
-            tar_filename = App.download_tar_archive(archive_url)
-            checksum = Checksum.get_checksum(tar_filename)
-            archive_checksum_entry = f'{checksum} {tar_filename}'
-            checksums.append(
-                {
-                    tar_filename: {
-                        'checksum': checksum,
-                        'url': archive_url,
-                        'type': archive_type,
-                    }
-                },
-            )
+            if not assets:
+                assets = [0]  # TODO: This is a dumb hack to ensure we enter here even when we don't have any assets
+            for asset in assets:
+                # Download the asset url so private repos work but use the brower URL for name and path in formula
+                if archive_url == auto_generated_release_tar or archive_url == auto_generated_release_zip:
+                    download_url = archive_url
+                else:
+                    download_url = asset['url']
 
-            Utils.write_file(CHECKSUM_FILE, archive_checksum_entry, 'a')
+                if (
+                    archive_url == auto_generated_release_tar
+                    or archive_url == auto_generated_release_zip
+                    or archive_url == asset['browser_download_url']
+                ):
+                    # For REST API requests, we should not stream archive file, but it is fine for browser URLs
+                    stream = False if archive_url.find("api.github.com") != -1 else True
+                    downloaded_filename = App.download_archive(download_url, stream)
+                    checksum = Checksum.get_checksum(downloaded_filename)
+                    archive_filename = Utils.get_filename_from_path(archive_url)
+                    archive_checksum_entries += f'{checksum} {archive_filename}\n'
+                    checksums.append(
+                        {
+                            archive_filename: {
+                                'checksum': checksum,
+                                'url': archive_url,
+                                'type': archive_type
+                            }
+                        },
+                    )
+                    break
+
+        Utils.write_file(CHECKSUM_FILE, archive_checksum_entries)
 
         logger.info(f'Generating Homebrew formula for {GITHUB_REPO}...')
         template = Formula.generate_formula_data(
@@ -151,6 +164,10 @@ class App:
             auto_generated_release_tar,
             DEPENDS_ON,
             TEST,
+            DOWNLOAD_STRATEGY,
+            CUSTOM_REQUIRE,
+            FORMULA_INCLUDES,
+            version_no_v if VERSION else None,
         )
 
         Utils.write_file(os.path.join(HOMEBREW_TAP, FORMULA_FOLDER, f'{repository["name"]}.rb'), template, 'w')
@@ -161,16 +178,17 @@ class App:
         else:
             logger.debug('Skipping update to project README.')
 
+        # Although users can skip a commit, still commit (and don't push) to dry-run a commit
+        Git.add(HOMEBREW_TAP)
+        Git.commit(HOMEBREW_TAP, GITHUB_REPO, version)
+
         if SKIP_COMMIT:
             logger.info(f'Skipping upload of checksum.txt to {HOMEBREW_TAP}.')
-            logger.info(f'Skipping commit to {HOMEBREW_TAP}.')
+            logger.info(f'Skipping push to {HOMEBREW_TAP}.')
         else:
             logger.info(f'Attempting to upload checksum.txt to the latest release of {GITHUB_REPO}...')
-            Checksum.upload_checksum_file()
-
+            Checksum.upload_checksum_file(latest_release)
             logger.info(f'Attempting to release {version} of {GITHUB_REPO} to {HOMEBREW_TAP}...')
-            Git.add(HOMEBREW_TAP)
-            Git.commit(HOMEBREW_TAP, GITHUB_REPO, version)
             Git.push(HOMEBREW_TAP, HOMEBREW_OWNER)
             logger.info(f'Successfully released {version} of {GITHUB_REPO} to {HOMEBREW_TAP}!')
 
@@ -205,10 +223,13 @@ class App:
         logger.debug('All required environment variables are present.')
 
     @staticmethod
-    def download_tar_archive(url: str) -> str:
-        """Gets a tar archive from GitHub and saves it locally."""
-        response = Utils.make_get_request(url, True)
-        filename = url.rsplit('/', 1)[1]
+    def download_archive(url: str, stream: Optional[bool] = False) -> str:
+        """Gets an archive (eg: zip, tar) from GitHub and saves it locally."""
+        response = Utils.make_github_get_request(
+            url=url,
+            stream=stream,
+        )
+        filename = Utils.get_filename_from_path(url)
         Utils.write_file(filename, response.content, 'wb')
 
         return filename
