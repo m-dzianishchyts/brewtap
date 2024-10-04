@@ -55,7 +55,7 @@ class App:
         App.setup_logger()
         logger = woodchips.get(LOGGER_NAME)
 
-        logger.info(f'Starting brewtap {__version__.local}...')
+        logger.info(f'Starting Brewtap {__version__}...')
         App.check_required_env_variables()
 
         logger.info('Setting up git environment...')
