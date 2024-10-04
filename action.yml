@@ -20,11 +20,11 @@ inputs:
   commit_owner:
     description: "Git author info used to commit to the homebrew tap."
     required: false
-    default: "brewtap@example.com"
+    default: "github-actions[bot]"
   commit_email:
     description: "Git author info used to commit to the homebrew tap."
     required: false
-    default: "brewtap@example.com"
+    default: "41898282+github-actions[bot]@users.noreply.github.com"
   depends_on:
     description: "Custom dependencies in case other formulas are needed to build the current one (can be multiline)."
     required: false

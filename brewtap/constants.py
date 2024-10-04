@@ -16,8 +16,8 @@ def translate_target(target: str | bool) -> str | bool:
 # User Input
 FORMULA_FOLDER = os.getenv('INPUT_FORMULA_FOLDER', 'Formula')
 GITHUB_TOKEN = os.getenv('INPUT_GITHUB_TOKEN')
-COMMIT_OWNER = os.getenv('INPUT_COMMIT_OWNER', 'brewtap')
-COMMIT_EMAIL = os.getenv('INPUT_COMMIT_EMAIL', 'brewtap@example.com')
+COMMIT_OWNER = os.getenv('INPUT_COMMIT_OWNER', 'github-actions[bot]')
+COMMIT_EMAIL = os.getenv('INPUT_COMMIT_EMAIL', '41898282+github-actions[bot]@users.noreply.github.com')
 HOMEBREW_OWNER = os.getenv('INPUT_HOMEBREW_OWNER')
 HOMEBREW_TAP = os.getenv('INPUT_HOMEBREW_TAP')
 DOWNLOAD_STRATEGY = os.getenv('INPUT_DOWNLOAD_STRATEGY')

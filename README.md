@@ -60,8 +60,8 @@ jobs:
 
           # Git author info used to commit to the homebrew tap.
           # Defaults are shown - strings
-          commit_owner: brewtap
-          commit_email: brewtap@example.com
+          commit_owner: github-actions[bot]
+          commit_email: 41898282+github-actions[bot]@users.noreply.github.com
 
           # Custom dependencies in case other formulas are needed to build the current one.
           # Optional - multiline string
