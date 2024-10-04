@@ -6,7 +6,7 @@ on:
       - '.github/workflows/build.yml'
       - '**/*.py'
     branches:
-      - '**'
+      - 'main'
     tags:
       - '!**'
   pull_request:

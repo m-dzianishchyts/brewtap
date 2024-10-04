@@ -1,3 +1,4 @@
+import os
 from typing import Optional
 
 import requests
@@ -41,6 +42,9 @@ class Utils:
         logger = woodchips.get(LOGGER_NAME)
 
         try:
+            location = os.path.dirname(file_path)
+            if location:
+                os.makedirs(location, exist_ok=True)
             with open(file_path, mode) as f:
                 f.write(content)
             logger.debug(f'{file_path} written successfully.')

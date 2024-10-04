@@ -1,3 +1,20 @@
+[build-system]
+requires = [
+    "setuptools",
+    "incremental>=24.7.2",
+    "towncrier>=24.8.0",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "homebrew_releaser"
+dynamic = ["version"]
+
+[tool.incremental]
+
+[tool.towncrier]
+filename = "CHANGELOG.md"
+
 [tool.black]
 preview = true
 line-length = 120
