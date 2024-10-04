@@ -156,6 +156,7 @@ class App:
                     )
                     break
 
+        logger.debug("checksums = %s", checksums)
         Utils.write_file(CHECKSUM_FILE, archive_checksum_entries)
 
         logger.info(f'Generating Homebrew formula for {GITHUB_REPO}...')
