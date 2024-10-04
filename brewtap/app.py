@@ -64,7 +64,7 @@ class App:
         logger.info(f'Collecting data about {GITHUB_REPO}...')
         repository = Utils.make_github_get_request(url=f'{GITHUB_BASE_URL}/repos/{GITHUB_OWNER}/{GITHUB_REPO}').json()
         release = Utils.make_github_get_request(
-            url=f'https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}/releases/{VERSION if VERSION else 'latest'}'
+            url=f'https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}/releases/{f"tags/{VERSION}" if VERSION else 'latest'}'  # noqa
         ).json()
         assets = release['assets']
         version = VERSION or release['tag_name']
