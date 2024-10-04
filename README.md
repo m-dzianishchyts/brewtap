@@ -20,7 +20,7 @@ When you cut a new release when using this GitHub Action, it will clone your rep
 **Notes:**
 
 - Shell scripts distributed via Brewtap **must be executable** and contain a proper shebang to work.
-- Brewtap **will always use the latest release** of a GitHub project. Git release tags must follow semantic versioning for Homebrew to properly infer the installation instructions (eg: `v1.2.0` or `0.3.0`, etc).
+- Git release tags must follow semantic versioning for Homebrew to properly infer the installation instructions (eg: `v1.2.0` or `0.3.0`, etc).
 - The Homebrew formula filename will match the github repo name.
 - It is **highly** recommended to enable debug mode and skip the commit on the first run through to ensure you have configured your workflow correctly and that the generated formula looks the way you want.
 - Brewtap is **not** compatible with monorepos.
