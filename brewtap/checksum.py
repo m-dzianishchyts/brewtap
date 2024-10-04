@@ -4,7 +4,7 @@ from typing import Any
 import requests
 import woodchips
 
-from homebrew_releaser.constants import (
+from brewtap.constants import (
     CHECKSUM_FILE,
     GITHUB_HEADERS,
     GITHUB_OWNER,
@@ -39,26 +39,30 @@ class Checksum:
         return checksum
 
     @staticmethod
-    def upload_checksum_file(latest_release: dict[str, Any]):
+    def upload_checksum_file(release: dict[str, Any]):
         """Uploads a `checksum.txt` file to the latest release of the repo."""
         logger = woodchips.get(LOGGER_NAME)
 
-        latest_release_id = latest_release['id']
+        release_id = release['id']
 
         with open(CHECKSUM_FILE, 'rb') as filename:
             checksum_binary = filename.read()
 
-        upload_url = f'https://uploads.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}/releases/{latest_release_id}/assets?name={CHECKSUM_FILE}'  # noqa
+        upload_url = f'https://uploads.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}/releases/{release_id}/assets?name={CHECKSUM_FILE}'  # noqa
         headers = GITHUB_HEADERS
         headers['Content-Type'] = 'text/plain'
 
         try:
-            _ = requests.post(
+            response = requests.post(
                 upload_url,
                 headers=headers,
                 data=checksum_binary,
                 timeout=TIMEOUT,
             )
-            logger.info(f'checksum.txt uploaded successfully to {GITHUB_REPO}.')
+            if response.ok:
+                logger.info(f'checksum.txt uploaded successfully to {GITHUB_REPO}.')
+            else:
+                logger.debug(response.json())
+                SystemExit(f'checksum.txt was not uploaded: received status code ${response.status_code}')
         except requests.exceptions.RequestException as error:
             raise SystemExit(error)

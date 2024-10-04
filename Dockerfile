@@ -10,4 +10,4 @@ COPY . .
 
 RUN pip install -e .
 
-ENTRYPOINT [ "python", "/homebrew_releaser/app.py" ]
+ENTRYPOINT [ "python", "/brewtap/app.py" ]

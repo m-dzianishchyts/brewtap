@@ -3,49 +3,40 @@ from typing import Optional
 
 import woodchips
 
-from homebrew_releaser._version import __version__
-from homebrew_releaser.checksum import Checksum
-from homebrew_releaser.constants import (
+from brewtap._version import __version__
+from brewtap.checksum import Checksum
+from brewtap.constants import (
     CHECKSUM_FILE,
+    COMMIT_EMAIL,
+    COMMIT_OWNER,
     CUSTOM_REQUIRE,
+    DEBUG,
+    DEPENDS_ON,
     DOWNLOAD_STRATEGY,
     FORMULA_FOLDER,
     FORMULA_INCLUDES,
+    GITHUB_BASE_URL,
     GITHUB_OWNER,
     GITHUB_REPO,
     GITHUB_TOKEN,
+    HOMEBREW_OWNER,
     HOMEBREW_TAP,
+    INSTALL,
     LOGGER_NAME,
     SKIP_COMMIT,
+    TARGET,
     TARGET_DARWIN_AMD64,
     TARGET_DARWIN_ARM64,
     TARGET_LINUX_AMD64,
     TARGET_LINUX_ARM64,
+    TEST,
+    UPDATE_README_TABLE,
     VERSION,
 )
-from homebrew_releaser.formula import Formula
-from homebrew_releaser.git import Git
-from homebrew_releaser.readme_updater import ReadmeUpdater
-from homebrew_releaser.utils import Utils
-
-
-GITHUB_BASE_URL = 'https://api.github.com'
-
-# Required GitHub Action env variables from user
-INSTALL = os.getenv('INPUT_INSTALL')
-HOMEBREW_OWNER = os.getenv('INPUT_HOMEBREW_OWNER')
-
-# Optional GitHub Action env variables from user
-COMMIT_OWNER = os.getenv('INPUT_COMMIT_OWNER', 'homebrew-releaser')
-COMMIT_EMAIL = os.getenv('INPUT_COMMIT_EMAIL', 'homebrew-releaser@example.com')
-DEPENDS_ON = os.getenv('INPUT_DEPENDS_ON')
-TEST = os.getenv('INPUT_TEST')
-UPDATE_README_TABLE = (
-    os.getenv('INPUT_UPDATE_README_TABLE', False) if os.getenv('INPUT_UPDATE_README_TABLE') != 'false' else False
-)  # Must check for string `false` since GitHub Actions passes the bool as a string
-DEBUG = (
-    os.getenv('INPUT_DEBUG', False) if os.getenv('INPUT_DEBUG') != 'false' else False
-)  # Must check for string `false` since GitHub Actions passes the bool as a string
+from brewtap.formula import Formula
+from brewtap.git import Git
+from brewtap.readme_updater import ReadmeUpdater
+from brewtap.utils import Utils
 
 
 class App:
@@ -64,7 +55,7 @@ class App:
         App.setup_logger()
         logger = woodchips.get(LOGGER_NAME)
 
-        logger.info(f'Starting Homebrew Releaser v{__version__}...')
+        logger.info(f'Starting Brewtap {__version__}...')
         App.check_required_env_variables()
 
         logger.info('Setting up git environment...')
@@ -72,16 +63,16 @@ class App:
 
         logger.info(f'Collecting data about {GITHUB_REPO}...')
         repository = Utils.make_github_get_request(url=f'{GITHUB_BASE_URL}/repos/{GITHUB_OWNER}/{GITHUB_REPO}').json()
-        latest_release = Utils.make_github_get_request(
-            url=f'https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}/releases/latest'
+        release = Utils.make_github_get_request(
+            url=f'https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}/releases/{VERSION if VERSION else 'latest'}'
         ).json()
-        assets = latest_release['assets']
-        version = VERSION or latest_release['tag_name']
+        assets = release['assets']
+        version = VERSION or release['tag_name']
         version_no_v = version.lstrip('v')
         logger.info(f'Latest release ({version}) successfully identified!')
 
         logger.info('Generating tar archive checksum(s)...')
-        archive_urls = []
+        archive_urls = dict()
         archive_checksum_entries = ''
 
         # Auto-generated tar URL must come first for later use (order is important)
@@ -96,23 +87,50 @@ class App:
             auto_generated_release_tar = f'{archive_base_url}.tar.gz'
             auto_generated_release_zip = f'{archive_base_url}.zip'
 
-        archive_urls.append(auto_generated_release_tar)
-        archive_urls.append(auto_generated_release_zip)
+        archive_urls['default'] = auto_generated_release_tar
 
         target_browser_download_base_url = (
-            f'https://github.com/{GITHUB_OWNER}/{GITHUB_REPO}/releases/download/{version}/{GITHUB_REPO}-{version_no_v}'
+            f'https://github.com/{GITHUB_OWNER}/{GITHUB_REPO}/releases/download/{version}/'
         )
+        default_target_prefix = f'{GITHUB_REPO}-{version_no_v}'
+        if isinstance(TARGET, str):
+            archive_urls['default'] = f'${target_browser_download_base_url}${TARGET}'
+            logger.debug('Target overridden (default): ', archive_urls['default'])
         if TARGET_DARWIN_AMD64:
-            archive_urls.append(f'{target_browser_download_base_url}-darwin-amd64.tar.gz')
+            archive_urls['darwin_amd64'] = (
+                f'${target_browser_download_base_url}${(
+                    TARGET_DARWIN_AMD64 if isinstance(TARGET_DARWIN_AMD64, str)
+                    else f'{default_target_prefix}-darwin-amd64.tar.gz'
+                )}'
+            )
+            logger.debug('Target overridden (darwin_amd64): ', archive_urls['darwin_amd64'])
         if TARGET_DARWIN_ARM64:
-            archive_urls.append(f'{target_browser_download_base_url}-darwin-arm64.tar.gz')
+            archive_urls['darwin_arm64'] = (
+                f'${target_browser_download_base_url}${(
+                    TARGET_DARWIN_ARM64 if isinstance(TARGET_DARWIN_ARM64, str)
+                    else f'{default_target_prefix}-darwin-arm64.tar.gz'
+                )}'
+            )
+            logger.debug('Target overridden (darwin_arm64): ', archive_urls['darwin_arm64'])
         if TARGET_LINUX_AMD64:
-            archive_urls.append(f'{target_browser_download_base_url}-linux-amd64.tar.gz')
+            archive_urls['linux_amd64'] = (
+                f'${target_browser_download_base_url}${(
+                    TARGET_LINUX_AMD64 if isinstance(TARGET_LINUX_AMD64, str)
+                    else f'{default_target_prefix}-linux-amd64.tar.gz'
+                )}'
+            )
+            logger.debug('Target overridden (linux_amd64): ', archive_urls['linux_amd64'])
         if TARGET_LINUX_ARM64:
-            archive_urls.append(f'{target_browser_download_base_url}-linux-arm64.tar.gz')
+            archive_urls['linux_arm64'] = (
+                f'${target_browser_download_base_url}${(
+                    TARGET_LINUX_ARM64 if isinstance(TARGET_LINUX_ARM64, str)
+                    else f'{default_target_prefix}-linux-arm64.tar.gz'
+                )}'
+            )
+            logger.debug('Target overridden (linux_arm64): ', archive_urls['linux_arm64'])
 
         checksums = []
-        for archive_url in archive_urls:
+        for archive_type, archive_url in archive_urls.items():
             if not assets:
                 assets = [0]  # TODO: This is a dumb hack to ensure we enter here even when we don't have any assets
             for asset in assets:
@@ -134,12 +152,7 @@ class App:
                     archive_filename = Utils.get_filename_from_path(archive_url)
                     archive_checksum_entries += f'{checksum} {archive_filename}\n'
                     checksums.append(
-                        {
-                            archive_filename: {
-                                'checksum': checksum,
-                                'url': archive_url,
-                            }
-                        },
+                        {archive_filename: {'checksum': checksum, 'url': archive_url, 'type': archive_type}},
                     )
                     break
 
@@ -152,7 +165,7 @@ class App:
             repository,
             checksums,
             INSTALL,
-            auto_generated_release_tar,
+            archive_urls['default'],
             DEPENDS_ON,
             TEST,
             DOWNLOAD_STRATEGY,
@@ -178,7 +191,7 @@ class App:
             logger.info(f'Skipping push to {HOMEBREW_TAP}.')
         else:
             logger.info(f'Attempting to upload checksum.txt to the latest release of {GITHUB_REPO}...')
-            Checksum.upload_checksum_file(latest_release)
+            Checksum.upload_checksum_file(release)
             logger.info(f'Attempting to release {version} of {GITHUB_REPO} to {HOMEBREW_TAP}...')
             Git.push(HOMEBREW_TAP, HOMEBREW_OWNER)
             logger.info(f'Successfully released {version} of {GITHUB_REPO} to {HOMEBREW_TAP}!')
@@ -209,7 +222,7 @@ class App:
         for env_variable in required_env_variables:
             if not env_variable:
                 raise SystemExit(
-                    'You must provide all necessary environment variables. Please reference the Homebrew Releaser documentation.'  # noqa
+                    'You must provide all necessary environment variables. Please reference the Brewtap documentation.'  # noqa
                 )
         logger.debug('All required environment variables are present.')
 

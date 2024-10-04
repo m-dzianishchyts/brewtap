@@ -3,4 +3,4 @@ exclude_lines =
     if __name__ == '__main__':
     main()
 [run]
-omit = homebrew_releaser/_version.py
+omit = brewtap/_version.py

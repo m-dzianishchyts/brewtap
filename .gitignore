@@ -1,10 +1,12 @@
 __pycache__
+.idea
 .coverage
 .DS_Store
 .env
 *.egg-info
 *.lcov
 dist
+build
 homebrew-formulas
 htmlcov
 venv

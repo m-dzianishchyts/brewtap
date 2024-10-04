@@ -1,4 +1,4 @@
-name: "Homebrew Releaser"
+name: "Brewtap"
 description: "Release scripts, binaries, and executables directly to Homebrew via GitHub Actions."
 branding:
   icon: "package"
@@ -20,11 +20,11 @@ inputs:
   commit_owner:
     description: "Git author info used to commit to the homebrew tap."
     required: false
-    default: "homebrew-releaser@example.com"
+    default: "brewtap@example.com"
   commit_email:
     description: "Git author info used to commit to the homebrew tap."
     required: false
-    default: "homebrew-releaser@example.com"
+    default: "brewtap@example.com"
   depends_on:
     description: "Custom dependencies in case other formulas are needed to build the current one (can be multiline)."
     required: false
@@ -42,6 +42,9 @@ inputs:
     required: false
   version:
     description: "Override the automatically detected version of a formula with an explicit value."
+    required: false
+  target:
+    description: "Add a custom URL/checksum target by default."
     required: false
   target_darwin_amd64:
     description: "Add a custom URL/checksum target for AMD64 Darwin builds."
@@ -76,6 +79,7 @@ runs:
     - ${{ inputs.commit_email }}
     - ${{ inputs.install }}
     - ${{ inputs.test }}
+    - ${{ inputs.target }}
     - ${{ inputs.target_darwin_amd64 }}
     - ${{ inputs.target_darwin_arm64 }}
     - ${{ inputs.target_linux_amd64 }}

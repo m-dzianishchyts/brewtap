@@ -5,14 +5,14 @@ from unittest.mock import (
 
 import pytest
 
-from homebrew_releaser.readme_updater import ReadmeUpdater
+from brewtap.readme_updater import ReadmeUpdater
 
 
-@patch('homebrew_releaser.readme_updater.ReadmeUpdater.format_formula_data')
-@patch('homebrew_releaser.readme_updater.ReadmeUpdater.generate_table')
-@patch('homebrew_releaser.readme_updater.ReadmeUpdater.retrieve_old_table', return_value=['', True])
-@patch('homebrew_releaser.readme_updater.ReadmeUpdater.read_current_readme')
-@patch('homebrew_releaser.readme_updater.ReadmeUpdater.replace_table_contents')
+@patch('brewtap.readme_updater.ReadmeUpdater.format_formula_data')
+@patch('brewtap.readme_updater.ReadmeUpdater.generate_table')
+@patch('brewtap.readme_updater.ReadmeUpdater.retrieve_old_table', return_value=['', True])
+@patch('brewtap.readme_updater.ReadmeUpdater.read_current_readme')
+@patch('brewtap.readme_updater.ReadmeUpdater.replace_table_contents')
 def test_update_readme(
     mock_replace_table_contents,
     mock_read_current_readme,
@@ -30,11 +30,11 @@ def test_update_readme(
     mock_replace_table_contents.assert_called_once()
 
 
-@patch('homebrew_releaser.readme_updater.ReadmeUpdater.format_formula_data')
-@patch('homebrew_releaser.readme_updater.ReadmeUpdater.generate_table')
-@patch('homebrew_releaser.readme_updater.ReadmeUpdater.retrieve_old_table', return_value=['', False])
-@patch('homebrew_releaser.readme_updater.ReadmeUpdater.read_current_readme')
-@patch('homebrew_releaser.readme_updater.ReadmeUpdater.replace_table_contents')
+@patch('brewtap.readme_updater.ReadmeUpdater.format_formula_data')
+@patch('brewtap.readme_updater.ReadmeUpdater.generate_table')
+@patch('brewtap.readme_updater.ReadmeUpdater.retrieve_old_table', return_value=['', False])
+@patch('brewtap.readme_updater.ReadmeUpdater.read_current_readme')
+@patch('brewtap.readme_updater.ReadmeUpdater.replace_table_contents')
 def test_update_readme_cannot_find_old_table(
     mock_replace_table_contents,
     mock_read_current_readme,
@@ -55,7 +55,7 @@ def test_update_readme_cannot_find_old_table(
     mock_replace_table_contents.assert_not_called()
 
 
-@patch('homebrew_releaser.readme_updater.FORMULA_FOLDER', 'test/unit')
+@patch('brewtap.readme_updater.FORMULA_FOLDER', 'test/unit')
 def test_format_formula_data_no_ruby_files():
     """Tests that we throw an error when the formula folder provided does not contain any
     Ruby files (formula files).
@@ -66,7 +66,7 @@ def test_format_formula_data_no_ruby_files():
     assert str(error.value) == 'No Ruby files found in the "formula_folder" provided.'
 
 
-@patch('homebrew_releaser.readme_updater.FORMULA_FOLDER', 'formulas')
+@patch('brewtap.readme_updater.FORMULA_FOLDER', 'formulas')
 def test_format_formula_data():
     """Tests that we build a list of formula metadata correctly based on what we found in the repo.
 
@@ -79,11 +79,11 @@ def test_format_formula_data():
     assert formulas[0] == {
         'name': 'test-generate-formula',
         'desc': 'Tool to release scripts, binaries, and executables to github',
-        'homepage': 'https://github.com/Justintime50/test-generate-formula',
+        'homepage': 'https://github.com/m-dzianishchyts/test-generate-formula',
     }
 
 
-@patch('homebrew_releaser.readme_updater.FORMULA_FOLDER', 'formulas')
+@patch('brewtap.readme_updater.FORMULA_FOLDER', 'formulas')
 def test_format_formula_data_error_reading_formula():
     """Tests that we throw an error when we cannot properly read formula data."""
     with patch('builtins.open', mock_open()) as mock_opening:
@@ -99,7 +99,7 @@ def test_generate_table():
     formulas = [
         {
             'name': 'mock-formula',
-            'homepage': 'https://github.com/justintime50/mock-formula',
+            'homepage': 'https://github.com/m-dzianishchyts/mock-formula',
             'desc': 'mock description',
         },
     ]
@@ -108,9 +108,9 @@ def test_generate_table():
     # fmt: off
     assert table == (
         '<!-- project_table_start -->\n'
-        '| Project                                                      | Description      | Install                     |\n' # noqa
-        '| ------------------------------------------------------------ | ---------------- | --------------------------- |\n' # noqa
-        '| [mock-formula](https://github.com/justintime50/mock-formula) | mock description | `brew install mock-formula` |\n' # noqa
+        '| Project                                                         | Description      | Install                     |\n' # noqa
+        '| --------------------------------------------------------------- | ---------------- | --------------------------- |\n' # noqa
+        '| [mock-formula](https://github.com/m-dzianishchyts/mock-formula) | mock description | `brew install mock-formula` |\n' # noqa
         '<!-- project_table_end -->\n'
     )
     # fmt: on
@@ -169,7 +169,7 @@ def test_read_current_readme():
     """Tests that the content of a README found is returned."""
     readme = ReadmeUpdater.read_current_readme('./')
 
-    assert '# Homebrew Releaser' in readme
+    assert '# Brewtap' in readme
 
 
 def test_replace_table_contents():
@@ -184,7 +184,7 @@ def test_replace_table_contents():
 
 
 @patch('logging.Logger.debug')
-@patch('homebrew_releaser.git.Git.add')
+@patch('brewtap.git.Git.add')
 def test_replace_table_contents_no_readme(mock_git_add, mock_logger):
     """Tests that we do not run through the update readme block when there is no readme."""
     ReadmeUpdater.replace_table_contents(

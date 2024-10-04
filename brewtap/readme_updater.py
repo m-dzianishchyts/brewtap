@@ -10,8 +10,10 @@ import _io  # type: ignore
 import pretty_tables
 import woodchips
 
-from homebrew_releaser.constants import (
+from brewtap.constants import (
     FORMULA_FOLDER,
+    HOMEBREW_OWNER,
+    HOMEBREW_TAP,
     LOGGER_NAME,
 )
 
@@ -31,7 +33,7 @@ class ReadmeUpdater:
         # Only update the README table if both start/end tags were found
         if found_old_table:
             formulas = ReadmeUpdater.format_formula_data(homebrew_tap)
-            new_table = ReadmeUpdater.generate_table(formulas)
+            new_table = ReadmeUpdater.generate_table(formulas, HOMEBREW_OWNER, HOMEBREW_TAP)
 
             readme_content = ReadmeUpdater.read_current_readme(homebrew_tap)
             ReadmeUpdater.replace_table_contents(readme_content, old_table, new_table, homebrew_tap)
@@ -85,19 +87,22 @@ class ReadmeUpdater:
         return formulas
 
     @staticmethod
-    def generate_table(formulas: List) -> str:
+    def generate_table(formulas: List, __owner: Optional[str] = None, __tap: Optional[str] = None) -> str:
         """Generates a pretty table which will be used in the README file."""
         logger = woodchips.get(LOGGER_NAME)
+        owner = __owner
+        tap = __tap.replace('homebrew-', '', 1) if __tap else None
 
         headers = ['Project', 'Description', 'Install']
         rows = []
 
         for formula in formulas:
+            prefix = f'{owner}/{tap}/' if owner and tap else ''
             rows.append(
                 [
                     f'[{formula["name"]}]({formula.get("homepage")})',
                     formula.get('desc'),
-                    f'`brew install {formula["name"]}`',
+                    f'`brew install {prefix}{formula["name"]}`',
                 ]
             )
 
@@ -141,7 +146,7 @@ class ReadmeUpdater:
                         old_table_found = True
                         break
 
-            if old_table_found is False:
+            if not old_table_found:
                 # If we can't find both start/end tags, reset the table so we don't blow away unassociated README data
                 old_table = ''
                 logger.error('Could not find both start and end tags for project table in README.')
