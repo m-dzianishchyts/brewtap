@@ -108,8 +108,8 @@ def test_generate_table():
     # fmt: off
     assert table == (
         '<!-- project_table_start -->\n'
-        '| Project                                                      | Description      | Install                     |\n' # noqa
-        '| ------------------------------------------------------------ | ---------------- | --------------------------- |\n' # noqa
+        '| Project                                                         | Description      | Install                     |\n' # noqa
+        '| --------------------------------------------------------------- | ---------------- | --------------------------- |\n' # noqa
         '| [mock-formula](https://github.com/m-dzianishchyts/mock-formula) | mock description | `brew install mock-formula` |\n' # noqa
         '<!-- project_table_end -->\n'
     )
