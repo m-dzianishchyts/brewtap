@@ -245,7 +245,7 @@
 - Overhauled the configurable options and provided more defaults out of the box. Changes include:
   - No longer support `owner` and `repo` as these variables are given to use by GitHub already
   - Changed `homebrew_formula_folder` to `formula_folder` - added a default of `formula`
-  - Changed `owner_email` to `commit_email` and added `commit_owner` - added defaults of `brewtap@example.com` and `brewtap` respectively
+  - Changed `owner_email` to `commit_email` and added `commit_owner` - added defaults of `homebrew_releaser@example.com` and `homebrew_releaser` respectively
   - Added `homebrew_owner` as an option to go alongside the already existing `homebrew_tap`, this allows you to release to a tap that may not be owned by the same person
 - Updated documentation with all changes
 - Cut out extra overhead on the Dockerfile to improve performance
@@ -267,7 +267,7 @@
 
 ## v0.2.0 (2021-01-05)
 
-- Changed name from `shell-releaser` to `brewtap` as this tool can really be used for any kind of script, binary, or executable
+- Changed name from `shell-releaser` to `homebrew_releaser` as this tool can really be used for any kind of script, binary, or executable
 - Changed env variable of `bin_install` to simply `install` as you may not need/want to place your scripts in bin and use `system` instead
 - Switch from `python-3.9` to `python3.9-alpine` Docker image for much faster performance. Manually install `git` and `perl-utils` in Docker image as we depend on them for correct operation
 - Added try/except blocks and properly throw exit codes/messages for each functionality
