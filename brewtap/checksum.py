@@ -49,7 +49,7 @@ class Checksum:
             checksum_binary = filename.read()
 
         upload_url = f'https://uploads.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}/releases/{release_id}/assets?name={CHECKSUM_FILE}'  # noqa
-        headers = GITHUB_HEADERS
+        headers = GITHUB_HEADERS.copy()
         headers['Content-Type'] = 'text/plain'
 
         try:
