@@ -95,7 +95,7 @@ class App:
         default_target_prefix = f'{GITHUB_REPO}-{version_no_v}'
         if isinstance(TARGET, str):
             archive_urls['default'] = f'${target_browser_download_base_url}${TARGET}'
-            logger.debug('Target overridden (default): ', archive_urls['default'])
+            logger.debug('Target overridden (default): %s', archive_urls['default'])
         if TARGET_DARWIN_AMD64:
             archive_urls['darwin_amd64'] = (
                 f'${target_browser_download_base_url}${(
@@ -103,7 +103,7 @@ class App:
                     else f'{default_target_prefix}-darwin-amd64.tar.gz'
                 )}'
             )
-            logger.debug('Target overridden (darwin_amd64): ', archive_urls['darwin_amd64'])
+            logger.debug('Target overridden (darwin_amd64): %s', archive_urls['darwin_amd64'])
         if TARGET_DARWIN_ARM64:
             archive_urls['darwin_arm64'] = (
                 f'${target_browser_download_base_url}${(
@@ -111,7 +111,7 @@ class App:
                     else f'{default_target_prefix}-darwin-arm64.tar.gz'
                 )}'
             )
-            logger.debug('Target overridden (darwin_arm64): ', archive_urls['darwin_arm64'])
+            logger.debug('Target overridden (darwin_arm64): %s', archive_urls['darwin_arm64'])
         if TARGET_LINUX_AMD64:
             archive_urls['linux_amd64'] = (
                 f'${target_browser_download_base_url}${(
@@ -119,7 +119,7 @@ class App:
                     else f'{default_target_prefix}-linux-amd64.tar.gz'
                 )}'
             )
-            logger.debug('Target overridden (linux_amd64): ', archive_urls['linux_amd64'])
+            logger.debug('Target overridden (linux_amd64): %s', archive_urls['linux_amd64'])
         if TARGET_LINUX_ARM64:
             archive_urls['linux_arm64'] = (
                 f'${target_browser_download_base_url}${(
@@ -127,7 +127,7 @@ class App:
                     else f'{default_target_prefix}-linux-arm64.tar.gz'
                 )}'
             )
-            logger.debug('Target overridden (linux_arm64): ', archive_urls['linux_arm64'])
+            logger.debug('Target overridden (linux_arm64): %s', archive_urls['linux_arm64'])
 
         checksums = []
         for archive_type, archive_url in archive_urls.items():
