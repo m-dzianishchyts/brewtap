@@ -114,11 +114,11 @@ jobs:
           # Update your homebrew tap's README with a table of all projects in the tap.
           # This is done by pulling the information from all your formula.rb files - eg:
           #
-          # | Project                                    | Description  | Install                  |
-          # | ------------------------------------------ | ------------ | ------------------------ |
-          # | [formula_1](https://github.com/user/repo1) | helpful text | `brew install formula_1` |
-          # | [formula_2](https://github.com/user/repo2) | helpful text | `brew install formula_2` |
-          # | [formula_3](https://github.com/user/repo3) | helpful text | `brew install formula_3` |
+          # | Project                                    | Description  | Install                          |
+          # | ------------------------------------------ | ------------ | -------------------------------- |
+          # | [formula_1](https://github.com/user/repo1) | helpful text | `brew install org/tap/formula_1` |
+          # | [formula_2](https://github.com/user/repo2) | helpful text | `brew install org/tap/formula_2` |
+          # | [formula_3](https://github.com/user/repo3) | helpful text | `brew install org/tap/formula_3` |
           #
           # Place the following in your README or wrap your project's table in these comment tags:
           # <!-- project_table_start -->
