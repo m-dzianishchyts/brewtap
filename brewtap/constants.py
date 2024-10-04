@@ -14,7 +14,7 @@ def translate_target(target: str | bool) -> str | bool:
 
 
 # User Input
-FORMULA_FOLDER = os.getenv('INPUT_FORMULA_FOLDER', 'formula')
+FORMULA_FOLDER = os.getenv('INPUT_FORMULA_FOLDER', 'Formula')
 GITHUB_TOKEN = os.getenv('INPUT_GITHUB_TOKEN')
 COMMIT_OWNER = os.getenv('INPUT_COMMIT_OWNER', 'brewtap')
 COMMIT_EMAIL = os.getenv('INPUT_COMMIT_EMAIL', 'brewtap@example.com')
