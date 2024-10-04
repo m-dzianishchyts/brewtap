@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## v0.20.0 (2024-10-04)
+
+- The project has been renamed to **Brewtap** as fork project.
+- Added support of custom asset names for default and platform specific targets.
+- The action creates all needed directories when writing to a file.
+- The action downloads assets from a tagged release instead of a latest release (allows prereleases).
+- Debug level of logging is enabled when running the action in debug mode. 
+
 ## v0.19.0 (2024-07-11)
 
 - Adds new `formula_includes` parameter to allow including items in the built formula
