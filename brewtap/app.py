@@ -3,9 +3,9 @@ from typing import Optional
 
 import woodchips
 
-from homebrew_releaser._version import __version__
-from homebrew_releaser.checksum import Checksum
-from homebrew_releaser.constants import (
+from brewtap._version import __version__
+from brewtap.checksum import Checksum
+from brewtap.constants import (
     CHECKSUM_FILE,
     COMMIT_EMAIL,
     COMMIT_OWNER,
@@ -33,10 +33,10 @@ from homebrew_releaser.constants import (
     UPDATE_README_TABLE,
     VERSION,
 )
-from homebrew_releaser.formula import Formula
-from homebrew_releaser.git import Git
-from homebrew_releaser.readme_updater import ReadmeUpdater
-from homebrew_releaser.utils import Utils
+from brewtap.formula import Formula
+from brewtap.git import Git
+from brewtap.readme_updater import ReadmeUpdater
+from brewtap.utils import Utils
 
 
 class App:
@@ -55,7 +55,7 @@ class App:
         App.setup_logger()
         logger = woodchips.get(LOGGER_NAME)
 
-        logger.info(f'Starting Homebrew Releaser v{__version__}...')
+        logger.info(f'Starting brewtap {__version__.local}...')
         App.check_required_env_variables()
 
         logger.info('Setting up git environment...')
@@ -222,7 +222,7 @@ class App:
         for env_variable in required_env_variables:
             if not env_variable:
                 raise SystemExit(
-                    'You must provide all necessary environment variables. Please reference the Homebrew Releaser documentation.'  # noqa
+                    'You must provide all necessary environment variables. Please reference the Brewtap documentation.'  # noqa
                 )
         logger.debug('All required environment variables are present.')
 

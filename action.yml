@@ -1,4 +1,4 @@
-name: "Homebrew Releaser"
+name: "Brewtap"
 description: "Release scripts, binaries, and executables directly to Homebrew via GitHub Actions."
 branding:
   icon: "package"
@@ -20,11 +20,11 @@ inputs:
   commit_owner:
     description: "Git author info used to commit to the homebrew tap."
     required: false
-    default: "homebrew-releaser@example.com"
+    default: "brewtap@example.com"
   commit_email:
     description: "Git author info used to commit to the homebrew tap."
     required: false
-    default: "homebrew-releaser@example.com"
+    default: "brewtap@example.com"
   depends_on:
     description: "Custom dependencies in case other formulas are needed to build the current one (can be multiline)."
     required: false

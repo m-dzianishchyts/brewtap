@@ -16,8 +16,8 @@ def translate_target(target: str | bool) -> str | bool:
 # User Input
 FORMULA_FOLDER = os.getenv('INPUT_FORMULA_FOLDER', 'formula')
 GITHUB_TOKEN = os.getenv('INPUT_GITHUB_TOKEN')
-COMMIT_OWNER = os.getenv('INPUT_COMMIT_OWNER', 'homebrew-releaser')
-COMMIT_EMAIL = os.getenv('INPUT_COMMIT_EMAIL', 'homebrew-releaser@example.com')
+COMMIT_OWNER = os.getenv('INPUT_COMMIT_OWNER', 'brewtap')
+COMMIT_EMAIL = os.getenv('INPUT_COMMIT_EMAIL', 'brewtap@example.com')
 HOMEBREW_OWNER = os.getenv('INPUT_HOMEBREW_OWNER')
 HOMEBREW_TAP = os.getenv('INPUT_HOMEBREW_TAP')
 DOWNLOAD_STRATEGY = os.getenv('INPUT_DOWNLOAD_STRATEGY')
@@ -39,11 +39,11 @@ DEBUG = (
 
 # App Constants
 GITHUB_BASE_URL = 'https://api.github.com'
-LOGGER_NAME = 'homebrew-releaser'
+LOGGER_NAME = 'brewtap'
 TIMEOUT = 30
 GITHUB_HEADERS = {
     'Accept': 'application/vnd.github.v3+json',
-    'Agent': 'Homebrew Releaser',
+    'Agent': 'Brewtap',
     'Authorization': f'Bearer {GITHUB_TOKEN}',
 }
 CHECKSUM_FILE = 'checksum.txt'

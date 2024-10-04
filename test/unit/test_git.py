@@ -6,15 +6,15 @@ from unittest.mock import (
 
 import pytest
 
-from homebrew_releaser.constants import TIMEOUT
-from homebrew_releaser.git import Git
+from brewtap.constants import TIMEOUT
+from brewtap.git import Git
 
 
-@patch('homebrew_releaser.git.GITHUB_TOKEN', '123')
+@patch('brewtap.git.GITHUB_TOKEN', '123')
 @patch('subprocess.check_output')
 def test_setup(mock_subprocess):
     """Tests that we call the correct subprocess commands when setting up the git environment."""
-    homebrew_owner = 'Justintime50'
+    homebrew_owner = 'm-dzianishchyts'
     homebrew_tap = 'homebrew-formulas'
     commit_email = 'user@example.com'
     Git.setup(homebrew_owner, commit_email, homebrew_owner, homebrew_tap)
@@ -26,14 +26,14 @@ def test_setup(mock_subprocess):
                     'git',
                     'clone',
                     '--depth=1',
-                    'https://x-access-token:123@github.com/Justintime50/homebrew-formulas.git',
+                    'https://x-access-token:123@github.com/m-dzianishchyts/homebrew-formulas.git',
                 ],
                 stderr=-2,
                 text=True,
                 timeout=30,
             ),
             call(
-                ['git', '-C', 'homebrew-formulas', 'config', 'user.name', '"Justintime50"'],
+                ['git', '-C', 'homebrew-formulas', 'config', 'user.name', '"m-dzianishchyts"'],
                 stderr=-2,
                 text=True,
                 timeout=30,
@@ -78,12 +78,12 @@ def test_commit(mock_subprocess):
     )
 
 
-@patch('homebrew_releaser.git.GITHUB_TOKEN', '123')
+@patch('brewtap.git.GITHUB_TOKEN', '123')
 @patch('subprocess.check_output')
 def test_push(mock_subprocess):
     """Tests that we call the correct git push command."""
     homebrew_tap = 'homebrew-formulas'
-    homebrew_owner = 'Justintime50'
+    homebrew_owner = 'm-dzianishchyts'
 
     Git.push(homebrew_tap, homebrew_owner)
 
@@ -111,7 +111,7 @@ def test_setup_called_process_error(mock_subprocess, mock_logger):
 
     All git commands should fail in the same manner.
     """
-    homebrew_owner = 'Justintime50'
+    homebrew_owner = 'm-dzianishchyts'
     homebrew_tap = 'homebrew-formulas'
     commit_email = 'user@example.com'
     with pytest.raises(subprocess.CalledProcessError):
@@ -130,7 +130,7 @@ def test_setup_exception(mock_subprocess, mock_logger):
 
     All git commands should fail in the same manner.
     """
-    homebrew_owner = 'Justintime50'
+    homebrew_owner = 'm-dzianishchyts'
     homebrew_tap = 'homebrew-formulas'
     commit_email = 'user@example.com'
     with pytest.raises(Exception):

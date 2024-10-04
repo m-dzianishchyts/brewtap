@@ -3,7 +3,7 @@ from typing import Optional
 
 import woodchips
 
-from homebrew_releaser.constants import (
+from brewtap.constants import (
     GITHUB_TOKEN,
     LOGGER_NAME,
     TIMEOUT,

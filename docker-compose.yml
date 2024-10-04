@@ -1,6 +1,6 @@
 services:
-  homebrew-releaser:
-    container_name: homebrew-releaser
+  brewtap:
+    container_name: brewtap
     build: .
     environment:
       # Env vars that should be `false` should be left empty

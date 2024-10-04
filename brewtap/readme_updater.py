@@ -10,7 +10,7 @@ import _io  # type: ignore
 import pretty_tables
 import woodchips
 
-from homebrew_releaser.constants import (
+from brewtap.constants import (
     FORMULA_FOLDER,
     HOMEBREW_OWNER,
     HOMEBREW_TAP,

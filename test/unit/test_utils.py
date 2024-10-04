@@ -6,13 +6,13 @@ from unittest.mock import (
 import pytest
 import requests
 
-from homebrew_releaser.constants import GITHUB_HEADERS
-from homebrew_releaser.utils import Utils
+from brewtap.constants import GITHUB_HEADERS
+from brewtap.utils import Utils
 
 
 @patch('requests.get')
 def test_make_github_get_request(mock_request):
-    url = 'https://api.github.com/repos/Justintime50/homebrew-releaser'
+    url = 'https://api.github.com/repos/m-dzianishchyts/brewtap'
     Utils.make_github_get_request(url=url)
 
     mock_request.assert_called_once_with(
@@ -27,7 +27,7 @@ def test_make_github_get_request(mock_request):
 @patch('requests.get')
 def test_make_github_get_request_stream(mock_request):
     """Tests that we setup a request correctly when we enable streaming."""
-    url = 'https://api.github.com/repos/Justintime50/homebrew-releaser'
+    url = 'https://api.github.com/repos/m-dzianishchyts/brewtap'
     Utils.make_github_get_request(url=url, stream=True)
 
     headers = GITHUB_HEADERS
@@ -44,7 +44,7 @@ def test_make_github_get_request_stream(mock_request):
 
 @patch('requests.get', side_effect=requests.exceptions.RequestException('mock-error'))
 def test_make_github_get_request_exception(mock_request):
-    url = 'https://api.github.com/repos/Justintime50/homebrew-releaser'
+    url = 'https://api.github.com/repos/m-dzianishchyts/brewtap'
     with pytest.raises(SystemExit) as error:
         Utils.make_github_get_request(url=url)
 

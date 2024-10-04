@@ -1,25 +1,25 @@
 import os
 from unittest.mock import patch
 
-from homebrew_releaser.app import App
+from brewtap.app import App
 
 
 @patch.dict(os.environ, {'INPUT_SKIP_COMMIT': 'false'})
 @patch.dict(os.environ, {'INPUT_SKIP_COMMIT': 'false'})
-@patch('homebrew_releaser.readme_updater.ReadmeUpdater.update_readme')
-@patch('homebrew_releaser.checksum.Checksum.upload_checksum_file')
-@patch('homebrew_releaser.app.HOMEBREW_TAP', '123')
+@patch('brewtap.readme_updater.ReadmeUpdater.update_readme')
+@patch('brewtap.checksum.Checksum.upload_checksum_file')
+@patch('brewtap.app.HOMEBREW_TAP', '123')
 @patch('woodchips.get')
-@patch('homebrew_releaser.git.Git.setup')
-@patch('homebrew_releaser.git.Git.add')
-@patch('homebrew_releaser.git.Git.commit')
-@patch('homebrew_releaser.git.Git.push')
-@patch('homebrew_releaser.utils.Utils.write_file')
-@patch('homebrew_releaser.formula.Formula.generate_formula_data')
-@patch('homebrew_releaser.checksum.Checksum.get_checksum', return_value=('123', 'mock-repo'))
-@patch('homebrew_releaser.app.App.download_archive')
-@patch('homebrew_releaser.utils.Utils.make_github_get_request')
-@patch('homebrew_releaser.app.App.check_required_env_variables')
+@patch('brewtap.git.Git.setup')
+@patch('brewtap.git.Git.add')
+@patch('brewtap.git.Git.commit')
+@patch('brewtap.git.Git.push')
+@patch('brewtap.utils.Utils.write_file')
+@patch('brewtap.formula.Formula.generate_formula_data')
+@patch('brewtap.checksum.Checksum.get_checksum', return_value=('123', 'mock-repo'))
+@patch('brewtap.app.App.download_archive')
+@patch('brewtap.utils.Utils.make_github_get_request')
+@patch('brewtap.app.App.check_required_env_variables')
 def test_run_github_action_string_false_config(
     mock_check_env_variables,
     mock_make_github_get_request,

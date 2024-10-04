@@ -4,7 +4,7 @@ from typing import Optional
 import requests
 import woodchips
 
-from homebrew_releaser.constants import (
+from brewtap.constants import (
     GITHUB_HEADERS,
     LOGGER_NAME,
     TIMEOUT,
