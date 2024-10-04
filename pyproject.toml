@@ -3,14 +3,6 @@ requires = [
     "setuptools == 75.*",
     "incremental == 24.*",
     "towncrier == 24.*",
-    "bandit == 1.7.*",
-    "black == 24.*",
-    "flake8 == 7.*",
-    "isort == 5.*",
-    "mypy == 1.10.*",
-    "pytest == 8.*",
-    "pytest-cov == 5.*",
-    "types-requests == 2.*",
 ]
 build-backend = "setuptools.build_meta"
 
@@ -28,6 +20,16 @@ dependencies = [
     "pretty-tables == 2.*",
     "requests == 2.*",
     "woodchips == 1.*",
+]
+optional-dependencies.dev = [
+    "bandit == 1.7.*",
+    "black == 24.*",
+    "flake8 == 7.*",
+    "isort == 5.*",
+    "mypy == 1.10.*",
+    "pytest == 8.*",
+    "pytest-cov == 5.*",
+    "types-requests == 2.*",
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
