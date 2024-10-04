@@ -9,8 +9,6 @@ Release scripts, binaries, and executables directly to Homebrew via GitHub Actio
 [![Version](https://img.shields.io/github/v/tag/m-dzianishchyts/brewtap)](https://github.com/m-dzianishchyts/brewtap/releases)
 [![Licence](https://img.shields.io/github/license/m-dzianishchyts/brewtap)](LICENSE)
 
-<img src="https://raw.githubusercontent.com/m-dzianishchyts/assets/main/src/brewtap/showcase.png" alt="Showcase">
-
 </div>
 
 Brewtap allows you to release scripts, binaries, and executables directly to a personal Homebrew tap via a GitHub Action.
