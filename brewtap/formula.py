@@ -188,9 +188,11 @@ class {{class_name}} < Formula
   end
   {{/ linux}}
 
+  {{# install_instructions}}
   def install
     {{{install_instructions}}}
   end
+  {{/ install_instructions}}
   {{# test_instructions}}
 
   test do
