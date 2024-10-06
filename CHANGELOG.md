@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v0.21.1 (2024-10-06)
+
+- Disabled trim for every `install`/`test` instruction.
+
 ## v0.21.0 (2024-10-06)
 
 - Improve `install` and `test` templates. Multiline blocks are allowed now.
