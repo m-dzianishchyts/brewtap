@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## v0.20.1 (2024-10-04)
+
+- Fix invalid asset URLs.
+- Fix logging errors.
+- Fix inconsistent HTTP headers.
+- Set Formula as default directory name.
+- Set github-actions[bot] as default commit author.
+
 ## v0.20.0 (2024-10-04)
 
 - The project has been renamed to **Brewtap** as fork project.
