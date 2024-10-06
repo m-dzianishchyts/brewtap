@@ -70,12 +70,16 @@ jobs:
             "gcc"
 
           # Custom install command for your formula.
-          # Required - string
-          install: 'bin.install "src/my-script.sh" => "my-script"'
+          # Required - multiline string
+          install: |
+            bin.install "src/my-script.sh" => "my-script"
+            ohai "Installed successfully."
 
           # Custom test command for your formula so you can run `brew test`.
-          # Optional - string
-          test: 'assert_match("my script output", shell_output("my-script-command"))'
+          # Optional - multiline string
+          test: |
+            assert_match("my script output", shell_output("my-script-command"))
+            puts "Test passed."
 
           # Allows you to set a custom download strategy. Note that you'll need
           # to implement the strategy and add it to your tap repository.

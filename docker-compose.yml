@@ -12,8 +12,8 @@ services:
       - INPUT_COMMIT_OWNER=username
       - INPUT_COMMIT_EMAIL=userid+username@users.noreply.github.com
       - INPUT_DEPENDS_ON='"bash" => :build'
-      - INPUT_INSTALL='bin.install "src/my-script.sh" => "my-script"'
-      - INPUT_TEST='assert_match("my script output", shell_output("my-script-command"))'
+      - INPUT_INSTALL='bin.install "src/my-script.sh" => "my-script"\nohai "Installed successfully."'
+      - INPUT_TEST='assert_match("my script output", shell_output("my-script-command"))\nputs "Test passed."'
       - INPUT_DOWNLOAD_STRATEGY=
       - INPUT_CUSTOM_REQUIRE=
       - INPUT_FORMULA_INCLUDES=

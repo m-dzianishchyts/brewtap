@@ -11,9 +11,11 @@ class TestGenerateFormulaNoDependsOn < Formula
 
   def install
     bin.install "src/secure-browser-kiosk.sh" => "secure-browser-kiosk"
+    ohai "Installed successfully."
   end
 
   test do
     assert_match("my script output", shell_output("my-script-command"))
+    puts "Test passed."
   end
 end

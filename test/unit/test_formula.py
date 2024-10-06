@@ -10,13 +10,19 @@ formula_path = 'test/formulas'
 USERNAME = 'm-dzianishchyts'
 VERSION = '0.1.0'
 CHECKSUM = '0' * 64  # `brew audit` wants a 64 character number here, this would be true with real data
-INSTALL = 'bin.install "src/secure-browser-kiosk.sh" => "secure-browser-kiosk"'
+INSTALL = '''
+bin.install "src/secure-browser-kiosk.sh" => "secure-browser-kiosk"
+ohai "Installed successfully."
+'''
 # Dependencies are purposefully out of order so we can test that they get ordered properly for `brew audit`
 DEPENDS_ON = """
 "gcc"
 "bash" => :build
 """
-TEST = 'assert_match("my script output", shell_output("my-script-command"))'
+TEST = '''
+assert_match("my script output", shell_output("my-script-command"))
+puts "Test passed."
+'''
 DESCRIPTION = 'Release scripts, binaries, and executables to GitHub'
 LICENSE = {'spdx_id': 'MIT'}
 
@@ -108,11 +114,13 @@ def test_generate_formula():
     assert (
         '''def install
     bin.install "src/secure-browser-kiosk.sh" => "secure-browser-kiosk"
+    ohai "Installed successfully."
   end'''
         in formula
     )
     assert '''test do
     assert_match("my script output", shell_output("my-script-command"))
+    puts "Test passed."
   end'''
 
 

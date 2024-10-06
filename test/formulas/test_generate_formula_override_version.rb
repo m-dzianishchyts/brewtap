@@ -12,5 +12,6 @@ class TestGenerateFormulaOverrideVersion < Formula
 
   def install
     bin.install "src/secure-browser-kiosk.sh" => "secure-browser-kiosk"
+    ohai "Installed successfully."
   end
 end
