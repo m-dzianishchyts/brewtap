@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v0.20.2 (2024-10-06)
+
+- Fix install template.
+
 ## v0.20.1 (2024-10-04)
 
 - Fix invalid asset URLs.
