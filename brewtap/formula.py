@@ -261,7 +261,7 @@ end
         result_instructions: list[dict[str, str]] = []
         if not input_str:
             return result_instructions
-        instructions = [instruction.strip() for instruction in input_str.strip().split('\n')]
+        instructions = [instruction for instruction in input_str.strip().split('\n')]
         for instruction in instructions:
             result_instructions.append({'instruction': instruction})
         return result_instructions
