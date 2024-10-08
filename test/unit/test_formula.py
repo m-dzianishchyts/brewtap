@@ -23,6 +23,11 @@ TEST = '''
 assert_match("my script output", shell_output("my-script-command"))
 puts "Test passed."
 '''
+CAVEATS = '''
+This package requires `something` to be installed.
+
+Make sure `something` is available in your PATH.
+'''
 DESCRIPTION = 'Release scripts, binaries, and executables to GitHub'
 LICENSE = {'spdx_id': 'MIT'}
 
@@ -86,6 +91,7 @@ def test_generate_formula():
         tar_url=mock_tar_url,
         depends_on=DEPENDS_ON,
         test=TEST,
+        caveats=CAVEATS,
     )
 
     record_formula(formula_path, formula_filename, formula)
@@ -118,10 +124,27 @@ def test_generate_formula():
   end'''
         in formula
     )
-    assert '''test do
+    assert (
+        (
+            '''test do
     assert_match("my script output", shell_output("my-script-command"))
     puts "Test passed."
   end'''
+        )
+        in formula
+    )
+    assert (
+        (
+            '''def caveats
+    <<~EOS
+      This package requires `something` to be installed.
+
+      Make sure `something` is available in your PATH.
+    EOS
+  end'''
+        )
+        in formula
+    )
 
 
 def test_generate_formula_no_article_description():

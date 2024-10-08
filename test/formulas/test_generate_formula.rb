@@ -21,4 +21,12 @@ class TestGenerateFormula < Formula
     assert_match("my script output", shell_output("my-script-command"))
     puts "Test passed."
   end
+
+  def caveats
+    <<~EOS
+      This package requires `something` to be installed.
+
+      Make sure `something` is available in your PATH.
+    EOS
+  end
 end

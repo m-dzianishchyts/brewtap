@@ -27,6 +27,7 @@ VERSION = os.getenv('INPUT_VERSION')
 DEPENDS_ON = os.getenv('INPUT_DEPENDS_ON')
 INSTALL = os.getenv('INPUT_INSTALL')
 TEST = os.getenv('INPUT_TEST')
+CAVEATS = os.getenv('INPUT_CAVEATS')
 UPDATE_README_TABLE = (
     os.getenv('INPUT_UPDATE_README_TABLE', False) if os.getenv('INPUT_UPDATE_README_TABLE') != 'false' else False
 )  # Must check for string `false` since GitHub Actions passes the bool as a string

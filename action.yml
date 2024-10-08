@@ -34,6 +34,9 @@ inputs:
   test:
     description: "Custom test command for your formula so you can run `brew test`."
     required: false
+  caveats:
+    description: "Comment block that is added to warn users (non-standard install paths, any other packaging issues)."
+    required: false
   download_strategy:
     description: "The Homebrew download strategy to use for formulas."
     required: false

@@ -80,6 +80,13 @@ jobs:
           test: |
             assert_match("my script output", shell_output("my-script-command"))
             puts "Test passed."
+            
+          # Warning message in case there are specific issues with the Homebrew packaging.
+          # Optional - multiline string
+          caveats: |
+            This package requires `something` to be installed.
+
+            Make sure `something` is available in your PATH.
 
           # Allows you to set a custom download strategy. Note that you'll need
           # to implement the strategy and add it to your tap repository.
