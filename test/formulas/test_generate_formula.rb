@@ -6,6 +6,7 @@ class TestGenerateFormula < Formula
   desc "Tool to release scripts, binaries, and executables to github"
   homepage "https://github.com/m-dzianishchyts/test-generate-formula"
   url "https://github.com/m-dzianishchyts/test-generate-formula/archive/refs/tags/v0.1.0.tar.gz"
+  version "1.1.1"
   sha256 "0000000000000000000000000000000000000000000000000000000000000000"
   license "MIT"
 

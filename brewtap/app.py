@@ -6,6 +6,7 @@ import woodchips
 from brewtap._version import __version__
 from brewtap.checksum import Checksum
 from brewtap.constants import (
+    CAVEATS,
     CHECKSUM_FILE,
     COMMIT_EMAIL,
     COMMIT_OWNER,
@@ -161,18 +162,19 @@ class App:
 
         logger.info(f'Generating Homebrew formula for {GITHUB_REPO}...')
         template = Formula.generate_formula_data(
-            GITHUB_OWNER,
-            GITHUB_REPO,
-            repository,
-            checksums,
-            INSTALL,
-            archive_urls['default'],
-            DEPENDS_ON,
-            TEST,
-            DOWNLOAD_STRATEGY,
-            CUSTOM_REQUIRE,
-            FORMULA_INCLUDES,
-            version_no_v if VERSION else None,
+            owner=GITHUB_OWNER,
+            repo_name=GITHUB_REPO,
+            repository=repository,
+            checksums=checksums,
+            install=INSTALL,
+            tar_url=archive_urls['default'],
+            depends_on=DEPENDS_ON,
+            test=TEST,
+            caveats=CAVEATS,
+            download_strategy=DOWNLOAD_STRATEGY,
+            custom_require=CUSTOM_REQUIRE,
+            formula_includes=FORMULA_INCLUDES,
+            version=version_no_v if VERSION else None,
         )
 
         Utils.write_file(os.path.join(HOMEBREW_TAP, FORMULA_FOLDER, f'{repository["name"]}.rb'), template, 'w')
