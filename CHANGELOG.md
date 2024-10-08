@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v0.22.1 (2024-10-08)
+
+- Fix broken formula generation due to invalid argument list.
+
 ## v0.22.0 (2024-10-08)
 
 - Added `caveats` input.
