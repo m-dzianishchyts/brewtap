@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## v0.22.0 (2024-10-08)
+
+- Added `caveats` input.
+- Empty lines in `install` and `test` blocks are trimmed now.
+
 ## v0.21.1 (2024-10-06)
 
 - Disabled trim for every `install`/`test` instruction.
